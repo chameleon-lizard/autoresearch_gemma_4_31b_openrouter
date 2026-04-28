@@ -81,26 +81,24 @@ class AutoresearchLoop:
             # 1. Stage C: Select Parent
             history = self._get_history()
             best_id, best_text = self._get_best_artifact()
-            selection = self.refiner.stage_c_select(history, {"id": best_id, "text": best_text})
+            selection = self.refiner.stage_c_select(history, {"id": best_id, "text": best_text}, batch_id=current_iter)
             
             if selection["selection"] == "single":
-                # Need to find the artifact text for the selected ID
-                # In a real implementation, we'd map ID -> Hash -> Text
                 parent_text = best_text 
             else:
                 # Stage M: Merge
-                parent_texts = [best_text] # Simplified for mock
-                parent_text = self.refiner.stage_m_merge(parent_texts)
+                parent_texts = [best_text] 
+                parent_text = self.refiner.stage_m_merge(parent_texts, batch_id=current_iter)
             
             # 2. Stage A: Diagnose
-            # Use errors from the parent's dev score
             parent_hash = compute_artifact_hash(parent_text)
             dev_results = self.scorer.score_artifact(parent_text, "dev")
-            summary = self.refiner.stage_a_diagnose(parent_text, dev_results.get("errors", []))
+            summary = self.refiner.stage_a_diagnose(parent_text, dev_results.get("errors", []), batch_id=current_iter)
             
             # 3. Stage B: Propose
             notebook_text = NOTES_FILE.read_text() if NOTES_FILE.exists() else ""
-            proposals = self.refiner.stage_b_propose(parent_text, summary, str(history), notebook_text, self.k_siblings)
+            history_text = self.refiner._render_history(history, best_id)
+            proposals = self.refiner.stage_b_propose(parent_text, summary, history_text, notebook_text, batch_id=current_iter, K=self.k_siblings)
             
             # 4. Score Siblings in Parallel
             batch_artifacts = [p["artifact"] for p in proposals]
