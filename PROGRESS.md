@@ -19,4 +19,19 @@
 - [ ] `OPS.md` Documentation
 
 ## Working Features
-- [ ] (None yet)
+- [x] Project Infrastructure (Paths, State Dir, WIKI, PROGRESS)
+- [x] Dataset Splitter (Deterministic, Stratified)
+- [x] Artifact Hashing & Cache Management
+- [x] Scorer Driver (Parallel execution, Cache integration)
+- [x] Metrics Module
+- [x] Refiner Stage A (Disagreement Generalisation)
+- [x] Refiner Stage B (Proposal Generation)
+- [x] Refiner Stage C (Selection Logic)
+- [x] Refiner Stage M (Merge Synthesis)
+- [x] Append-only Experiment Log (`experiments.jsonl`)
+- [x] Main Loop Integration
+- [x] Report Generator (`experiments_report.md`)
+- [x] Bi-directional Notebook (`notes.md`)
+- [x] CLI Interface (`loop run`, `loop report`, etc.)
+- [x] Observability (Live blocks, Failure dumps)
+- [x] `OPS.md` Documentation
